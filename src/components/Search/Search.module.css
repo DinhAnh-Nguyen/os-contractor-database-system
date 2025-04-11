@@ -1,8 +1,11 @@
-.main_container {
+.container {
   display: flex;
   flex-direction: row;
-  max-width: 100%;
-  height: 100vh;
+  /* max-width: 100%; */
+  /* height: 100vh; */
+  padding-right: 75px;
+  padding-left: 75px;
+  margin-top: 35px;
 }
 
 /* Qualification  */
@@ -28,11 +31,8 @@
   width: 100%;
 }
 
-/* Skill */
-
 /* Location */
 .search_location_container {
-  /* padding: 0px 10px; */
   margin-bottom: 20px;
 }
 
@@ -41,39 +41,10 @@
   padding-left: 10px;
 }
 
-.search_location {
-  /* display: flex;
-  flex-direction: row;
-  /* justify-content: center;
-  min-height: 20px; */
-}
-
-.search_container {
-  /* margin-right: 20px; */
-  /* margin-left: 200px; */
-  /* min-height: 90vh; */
-  /* max-width: 100%; */
-  /* margin-top: 60px; */
-}
-
 /* Mui */
 .MuiButtonBase-root {
   height: 30px;
 }
-
-/* .css-l3ln04-MuiAutocomplete-root .MuiOutlinedInput-root.MuiInputBase-sizeSmall {
-  position: relative;
-} */
-
-/* .css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator {
-  position: relative;
-  right: 10px;
-}
-
-.css-i4bv87-MuiSvgIcon-root {
-  position: relative;
-  right: 40px;
-} */
 
 .search_options h2 {
   display: flex;
