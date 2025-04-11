@@ -125,127 +125,128 @@ export default function Search() {
   return (
     <div className={style["container"]}>
       <Navigation />
-      <main className="search_container">
+      <main>
         <h1>Search</h1>
-        <p>
-          &quot;Our success is determined by new developers finding career
-          positions in other companies. We foster skill, determine will, and
-          help to establish the right attitude in new devs, reducing your risk
-          of hiring for your own development team.&quot;
-        </p>
-        <div className="search_qualification_container">
-          <p className="search_qualification_title">Search by Qualification</p>
+        <div className={style["search_container"]}>
           <div>
-            <div className="search_options_radio_container">
-              {qualificationsList.map((option) => (
-                <div className="search_options_radio" key={option}>
-                  <Radio
-                    checked={selectedQualification.includes(option)}
-                    onClick={() => handleOptionQualificationChange(option)}
-                  />
-                  {option}
-                  <br />
-                </div>
-              ))}
+            <p>
+              &quot;Our success is determined by new developers finding career
+              positions in other companies. We foster skill, determine will, and
+              help to establish the right attitude in new devs, reducing your
+              risk of hiring for your own development team.&quot;
+            </p>
+            <div className={style["search_qualification_container"]}>
+              <p>Search by qualifications</p>
+              <div>
+                {qualificationsList.map((option) => (
+                  <div className={style["search_radio"]} key={option}>
+                    <Radio
+                      checked={selectedQualification.includes(option)}
+                      onClick={() => handleOptionQualificationChange(option)}
+                    />
+                    {option}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        <SearchSkills
-          selectedQualification={selectedQualification}
-          initialSelectedSkills={selectedSkills}
-          getSelectedSkills={(skill) => setSelectedSkills(skill)}
-        />
-        <div className="search_location_container">
-          <p className="search_location_title">Search by Location</p>
-          <div className="search_location">
-            <CSCSelector
-              initialCountry={country}
-              initialState={state}
-              initialCity={city}
-              getCountry={(country) => setCountry(country)}
-              getState={(state) => setState(state)}
-              getCity={(city) => setCity(city)}
-            />
+          <SearchSkills
+            selectedQualification={selectedQualification}
+            initialSelectedSkills={selectedSkills}
+            getSelectedSkills={(skill) => setSelectedSkills(skill)}
+          />
+          <div className="search_location_container">
+            <p className="search_location_title">Search by Location</p>
+            <div className="search_location">
+              <CSCSelector
+                initialCountry={country}
+                initialState={state}
+                initialCity={city}
+                getCountry={(country) => setCountry(country)}
+                getState={(state) => setState(state)}
+                getCity={(city) => setCity(city)}
+              />
+            </div>
           </div>
-        </div>
-        <div className="button_container">
-          <div className="search_button">
-            <button onClick={handleSearch}>Search</button>
+          <div className="button_container">
+            <div className="search_button">
+              <button onClick={handleSearch}>Search</button>
+            </div>
+            <div className="clear_button">
+              <button onClick={handleClearAll}>Clear All</button>
+            </div>
           </div>
-          <div className="clear_button">
-            <button onClick={handleClearAll}>Clear All</button>
-          </div>
-        </div>
-        <ul className="contractor_list_container">
-          <div className="message">
-            {contractors.length === 1
-              ? "1 match"
-              : `${contractors.length} matches`}{" "}
-            for your project!
-          </div>
-          {contractors.map((contractor) => (
-            <div
-              className="contractor_container"
-              key={contractor?.id}
-              onClick={() => {
-                navigate(`/contractor/${contractor?.id}`, {
-                  state: {
-                    searchState: memoizedSearchState,
-                  },
-                });
-              }}
-            >
-              <div className="result_container">
-                <div className="result_percent">
-                  <b>
-                    {contractor.percentMatching ? (
-                      `${contractor.percentMatching}%`
-                    ) : (
-                      <p></p>
-                    )}
-                  </b>
-                </div>
-                {contractor?.profileImg ? (
-                  <div className="result_profile_image">
-                    <img src={contractor?.profileImg} alt="Profile" />
+          <ul className="contractor_list_container">
+            <div className="message">
+              {contractors.length === 1
+                ? "1 match"
+                : `${contractors.length} matches`}{" "}
+              for your project!
+            </div>
+            {contractors.map((contractor) => (
+              <div
+                className="contractor_container"
+                key={contractor?.id}
+                onClick={() => {
+                  navigate(`/contractor/${contractor?.id}`, {
+                    state: {
+                      searchState: memoizedSearchState,
+                    },
+                  });
+                }}
+              >
+                <div className="result_container">
+                  <div className="result_percent">
+                    <b>
+                      {contractor.percentMatching ? (
+                        `${contractor.percentMatching}%`
+                      ) : (
+                        <p></p>
+                      )}
+                    </b>
                   </div>
-                ) : (
-                  <div className="result_no_image">
-                    <img src={avatarURL} alt="Avatar" />
-                  </div>
-                )}
-              </div>
-              <div className="result_info">
-                <div>
-                  <b>{contractor?.firstName}&nbsp;</b>
-                  <b>{contractor?.lastName}&nbsp;</b>
-                  <div className="contractor_qualification_worksite">
-                    <div className="contractor_qualification2">
-                      {contractor?.qualification}
+                  {contractor?.profileImg ? (
+                    <div className="result_profile_image">
+                      <img src={contractor?.profileImg} alt="Profile" />
                     </div>
-                    <div className="contractor_worksite">
-                      {contractor?.workSite}
-                    </div>
-                  </div>
-                </div>
-                <div className="contractor_summary">{contractor.summary}</div>
-                <div className="contractor_skills">
-                  {contractor?.skills && (
-                    <div className="result_skills_btns">
-                      {contractor?.skills.map((resultSkill, index) => {
-                        return (
-                          <span key={index} className="badge">
-                            {resultSkill.skill}
-                          </span>
-                        );
-                      })}
+                  ) : (
+                    <div className="result_no_image">
+                      <img src={avatarURL} alt="Avatar" />
                     </div>
                   )}
                 </div>
+                <div className="result_info">
+                  <div>
+                    <b>{contractor?.firstName}&nbsp;</b>
+                    <b>{contractor?.lastName}&nbsp;</b>
+                    <div className="contractor_qualification_worksite">
+                      <div className="contractor_qualification2">
+                        {contractor?.qualification}
+                      </div>
+                      <div className="contractor_worksite">
+                        {contractor?.workSite}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="contractor_summary">{contractor.summary}</div>
+                  <div className="contractor_skills">
+                    {contractor?.skills && (
+                      <div className="result_skills_btns">
+                        {contractor?.skills.map((resultSkill, index) => {
+                          return (
+                            <span key={index} className="badge">
+                              {resultSkill.skill}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-        </ul>
+            ))}
+          </ul>
+        </div>
       </main>
     </div>
   );
