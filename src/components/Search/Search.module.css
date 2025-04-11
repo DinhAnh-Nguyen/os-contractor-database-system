@@ -12,17 +12,15 @@
   padding: 0px 4px;
 }
 
+.search_description {
+  color: var(--colour-secondary-4);
+}
+
 p {
   font-weight: 600;
   margin-top: 28px;
   margin-bottom: 28px;
 }
-
-p:first-of-type {
-  color: var(--colour-secondary-4);
-}
-
-
 
 /* Qualification  */
 .search_qualification_container {

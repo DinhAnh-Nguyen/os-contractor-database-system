@@ -129,7 +129,7 @@ export default function Search() {
         <h1>Search</h1>
         <div className={style["search_container"]}>
           <div>
-            <p>
+            <p className={style["search_description"]}>
               &quot;Our success is determined by new developers finding career
               positions in other companies. We foster skill, determine will, and
               help to establish the right attitude in new devs, reducing your
