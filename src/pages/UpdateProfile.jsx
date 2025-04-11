@@ -5,7 +5,7 @@ import ProfileForm from "../components/profileForm/ProfileForm";
 import RecruiterProfileForm from "../components/profileForm/RecruiterProfileForm";
 import { userProfileContext } from "../contexts/UserProfileContext";
 import { toast } from "react-toastify";
-import { Navigation } from "../components";
+import Navigation from "../components/navigation/Navigation";
 
 export default function MyProfile() {
 	const { user } = useContext(authContext);

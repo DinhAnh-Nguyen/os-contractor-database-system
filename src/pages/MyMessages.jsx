@@ -4,7 +4,7 @@ import { auth } from "../firebaseconfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast } from 'react-toastify';
 import { messagesContext } from '../contexts/MessagesContext';
-import { Navigation } from '../components';
+import Navigation from "../components/navigation/Navigation";
 import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
 import { parseKeywords, findKeywordsIn } from '../components/Chat/search';

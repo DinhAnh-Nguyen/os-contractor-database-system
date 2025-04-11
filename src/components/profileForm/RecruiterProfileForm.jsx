@@ -1,16 +1,16 @@
-import React, { useState, useContext, useRef } from 'react';
-import { toast } from 'react-toastify';
-import { store } from '../../firebaseconfig';
-import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
-import styles from './RecruiterProfileForm.module.css';
-import { userProfileContext } from '../../contexts/UserProfileContext';
-import { enforceSchema, RecDataSchema } from '../../constants/data';
-import Upload from '../upload/Upload';
-import InputSection from '../inputSection/InputSection';
-import ChangePassword from '../ChangePassword';
-import DeleteAccount from '../DeleteAccount';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useRef } from "react";
+import { toast } from "react-toastify";
+import { store } from "../../firebaseconfig";
+import { ref, getDownloadURL, uploadBytes, deleteObject } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import styles from "./RecruiterProfileForm.module.css";
+import { userProfileContext } from "../../contexts/UserProfileContext";
+import { enforceSchema, recDataSchema } from "../../constants/data";
+import Upload from "../upload/Upload";
+import InputSection from "../inputSection/InputSection";
+import ChangePassword from "../ChangePassword";
+import DeleteAccount from "../DeleteAccount";
+import { useNavigate } from "react-router-dom";
 
 export default function RecruiterProfileForm(props) {
   const navigate = useNavigate();

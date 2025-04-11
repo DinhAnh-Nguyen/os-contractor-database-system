@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { authContext } from "../contexts/Authorization";
 import { userProfileContext } from '../contexts/UserProfileContext';
-import { Navigation } from '../components';
+import Navigation from "../components/navigation/Navigation";
 import ResponsiveGrid from '../components/ResponsiveGrid';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 

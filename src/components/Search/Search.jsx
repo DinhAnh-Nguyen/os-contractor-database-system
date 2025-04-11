@@ -1,32 +1,30 @@
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
 import { userProfileContext } from "../../contexts/UserProfileContext";
-import { Navigation } from "../index";
-import React, { useContext, useState, useCallback, useMemo } from "react";
+import Navigation from "../navigation/Navigation";
+import React, {
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+} from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
 import { useNavigate } from "react-router-dom";
-import "./Search.css";
+import style from "./Search.module.css";
 import { qualificationsList } from "../../constants/data";
 
 const avatarURL = "/assets/avatar.png";
 
 export default function Search() {
   const navigate = useNavigate();
-  const contractorList = useContext(contractorsContext);
+  const contractorList = useContext(userProfileContext).contractors;
   const [contractors, setContractors] = useState([]);
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = React.useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedQualification, setSelectedQualification] = useState([]);
-
-  // Remove this constants and use the one from the constants/data.js file
-  // const qualification = [
-  //   "Developer",
-  //   "Designer",
-  //   "Product Manager",
-  //   "Project Manager",
-  // ];
 
   const filterContractors = useCallback(() => {
     const calculatePercentMatching = (contractor) => {
@@ -77,6 +75,10 @@ export default function Search() {
     city,
   ]);
 
+  useEffect(() => {
+    setContractors(filterContractors());
+  }, [contractorList, filterContractors]);
+
   const memoizedSearchState = useMemo(
     () => ({
       selectedQualification,
@@ -95,8 +97,7 @@ export default function Search() {
     setSelectedSkills([]);
   };
 
-  
-  const handleClearQualification = () => {
+  const handleClearAll = () => {
     setSelectedQualification([]);
 
     setSelectedSkills([]);
@@ -108,8 +109,21 @@ export default function Search() {
     setContractors([]);
   };
 
+  const handleSearch = () => {
+    setContractors(filterContractors());
+
+    setTimeout(() => {
+      const contractorListContainer = document.querySelector(
+        ".contractor_list_container"
+      );
+      if (contractorListContainer) {
+        contractorListContainer.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 0);
+  };
+
   return (
-    <div className="main_container">
+    <div className={style["container"]}>
       <Navigation />
       <main className="search_container">
         <h1>Search</h1>
@@ -134,12 +148,6 @@ export default function Search() {
                 </div>
               ))}
             </div>
-            {/* </Grid> */}
-            {/* <div className="clear_button">
-              <button onClick={handleClearQualification}>
-                Clear Qualification
-              </button>
-            </div> */}
           </div>
         </div>
         <SearchSkills
@@ -159,9 +167,6 @@ export default function Search() {
               getCity={(city) => setCity(city)}
             />
           </div>
-          {/* <div className="clear_button">
-            <button onClick={handleClearLocation}>Clear location</button>
-          </div> */}
         </div>
         <div className="button_container">
           <div className="search_button">
@@ -176,7 +181,7 @@ export default function Search() {
             {contractors.length === 1
               ? "1 match"
               : `${contractors.length} matches`}{" "}
-            for your project! ⬇
+            for your project!
           </div>
           {contractors.map((contractor) => (
             <div

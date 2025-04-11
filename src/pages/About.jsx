@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigation } from '../components';
+import Navigation from "../components/navigation/Navigation";
 import ResponsiveGrid from '../components/ResponsiveGrid';
 import ProfilePicture from '../components/ProfilePicture';
 

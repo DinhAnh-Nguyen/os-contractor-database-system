@@ -1,28 +1,36 @@
-import React, { useState, useContext, useRef } from 'react';
-import { toast } from 'react-toastify';
-import { store } from '../../firebaseconfig';
-import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
-import styles from './ProfileForm.module.css';
-import { userProfileContext } from '../../contexts/UserProfileContext';
-import { enforceSchema, techDataSchema } from '../../constants/data';
-import Upload from '../upload/Upload';
-import InputSection from '../inputSection/InputSection';
-import ChangePassword from '../ChangePassword';
-import DeleteAccount from '../DeleteAccount';
-import { useNavigate } from 'react-router-dom';
-import ResponsiveGrid from '../ResponsiveGrid';
-import Badge from '../Badge';
+import React, { useState, useContext, useRef } from "react";
+import { toast } from "react-toastify";
+import { store } from "../../firebaseconfig";
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import styles from "./ProfileForm.module.css";
+import { userProfileContext } from "../../contexts/UserProfileContext";
+import { enforceSchema, qualificationsList, techDataSchema } from "../../constants/data";
+import Upload from "../upload/Upload";
+import InputSection from "../inputSection/InputSection";
+import ChangePassword from "../ChangePassword";
+import DeleteAccount from "../DeleteAccount";
+import { useNavigate } from "react-router-dom";
+import ResponsiveGrid from "../ResponsiveGrid";
+import Badge from "../Badge";
 
 export default function ProfileForm(props) {
   const navigate = useNavigate();
 
   const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
-	const [newImageFile, setNewImageFile] = useState(null);
-	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
-	const [skills, setSkills] = useState(initialFormData.skills);
-	const [projects, setProjects] = useState(initialFormData.projects);
+  const [newImageFile, setNewImageFile] = useState(null);
+  const initialFormData = enforceSchema(
+    userProfile ? structuredClone(userProfile) : {},
+    techDataSchema
+  );
+  const [skills, setSkills] = useState(initialFormData.skills);
+  const [projects, setProjects] = useState(initialFormData.projects);
 
   const deleteSkill = (index) => {
     setSkills((prevSkills) => {
@@ -49,12 +57,12 @@ export default function ProfileForm(props) {
     }
   };
 
-	const addProject = () => {
-		setProjects((prevProjects) => [
-			...prevProjects,
-			enforceSchema({}, techDataSchema.projects[0])
-		]);
-	};
+  const addProject = () => {
+    setProjects((prevProjects) => [
+      ...prevProjects,
+      enforceSchema({}, techDataSchema.projects[0]),
+    ]);
+  };
 
   const form = useRef();
 
@@ -88,12 +96,12 @@ export default function ProfileForm(props) {
 
       if (newImageUrl) newUserProfile.profileImg = newImageUrl;
 
-			newUserProfile.otherInfo.githubUrl = formElements.githubUrl.value;
-			newUserProfile.otherInfo.linkedinUrl = formElements.linkedinUrl.value;
-			newUserProfile.availability = formElements.availability.value;
-			newUserProfile.workSite = formElements.workSite.value;
-			newUserProfile.skills = skills;
-			newUserProfile.projects = projects;
+      newUserProfile.otherInfo.githubUrl = formElements.githubUrl.value;
+      newUserProfile.otherInfo.linkedinUrl = formElements.linkedinUrl.value;
+      newUserProfile.availability = formElements.availability.value;
+      newUserProfile.workSite = formElements.workSite.value;
+      newUserProfile.skills = skills;
+      newUserProfile.projects = projects;
 
       await updateUserProfile(newUserProfile);
 
@@ -173,15 +181,16 @@ export default function ProfileForm(props) {
                   type: "select",
                   name: "qualification",
                   label: "Qualification *",
-                  options: [
-                    "Developer",
-                    "Designer",
-                    "Project Manager",
-                    "Product Manager",
-                    "Tester",
-                    "QA Manager",
-                    "Business Analyst",
-                  ],
+                  // options: [
+                  //   "Developer",
+                  //   "Designer",
+                  //   "Project Manager",
+                  //   "Product Manager",
+                  //   "Tester",
+                  //   "QA Manager",
+                  //   "Business Analyst",
+                  // ],
+                  options: qualificationsList,
                   required: true,
                 }}
                 value={initialFormData?.qualification}
