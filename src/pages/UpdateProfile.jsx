@@ -8,16 +8,16 @@ import { toast } from "react-toastify";
 import { Navigation } from "../components";
 
 export default function MyProfile() {
-  const { user } = useContext(authContext);
-  const { userProfile } = useContext(userProfileContext);
-  const navigate = useNavigate();
+	const { user } = useContext(authContext);
+	const { userProfile } = useContext(userProfileContext);
+	const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) {
-      toast.error("Please Login To View Profile");
-      navigate("/");
-    }
-  }, []);
+	useEffect(() => {
+		if (user === null) {
+			toast.error('Please Login To View Profile');
+			navigate('/');
+		}
+	}, [user]);
 
   return (
     <>

@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { authContext } from "../contexts/Authorization";
-import { contractorsContext } from "../contexts/ContractorsContext";
-import { Navigation } from "../components";
-import ResponsiveGrid from "../components/ResponsiveGrid";
-import ContractorCard from "../components/contractorCard/ContractorCard";
+import { userProfileContext } from '../contexts/UserProfileContext';
+import { Navigation } from '../components';
+import ResponsiveGrid from '../components/ResponsiveGrid';
+import ContractorCard from '../components/contractorCard/ContractorCard';
 
 export default function ContractorList() {
-  const { user } = useContext(authContext);
-  const contractorList = useContext(contractorsContext);
+	const { user } = useContext(authContext);
+	const { contractors } = useContext(userProfileContext);
 
   return (
     <>
@@ -24,14 +24,14 @@ export default function ContractorList() {
 
         <h2>Our Available Contractors</h2>
 
-        <ResponsiveGrid minColumnWidth="310px" rowGap="10px">
-          {contractorList.map((person, index) => (
-            <div key={index}>
-              <ContractorCard data={person} />
-            </div>
-          ))}
-        </ResponsiveGrid>
-      </main>
-    </>
-  );
+				<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
+					{contractors.map((person) => (
+						<div key={person.id}>
+							<ContractorCard data={person} />
+						</div>
+					))}
+				</ResponsiveGrid>
+			</main>
+		</>
+	);
 }

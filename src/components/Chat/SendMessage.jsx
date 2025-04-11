@@ -1,65 +1,27 @@
-import React, { useState, useContext,  useEffect } from "react";
-import { auth, db } from "../../firebaseconfig";
-import { addDoc, collection, serverTimestamp, query, where, getDoc, doc } from "firebase/firestore";
-import { authContext } from '../../contexts/Authorization';
-import { contractorsContext } from "../../contexts/ContractorsContext";
-import { recruiterContext } from "../../contexts/RecruiterContext";
+import React, { useContext } from "react";
+import { messagesContext } from '../../contexts/MessagesContext';
 
-const SendMessage = ({ scroll, profileUid }) => {
-  const [message, setMessage] = useState("");
-  const { user } = useContext(authContext);
-  const userUid = user?.uid;
-  const contractorList = useContext(contractorsContext);
-  const { recruiterList } = useContext(recruiterContext);
-  const [userData, setUserData] = useState(null);
-  const receiverUid = profileUid;
+import styles from "./SendMessage.module.css";
+
+import { ReactComponent as IconSend } from "../../assets/icons/sendMessage.svg";
 
 
+const SendMessage = ({ receiverUid }) => {
+  const { sendMessage } = useContext(messagesContext);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  const send = (event) => {
+    const messageField = event.target.elements["messageInput"];
 
-        contractorList.map((contractor) => {
-            if (userUid === contractor?.firebaseUID) {
-                setUserData(contractor);
-            }
-            else {
-                recruiterList.map((recruiter) => {
-                    if(userUid === recruiter?.firebaseUID){
-                        setUserData(recruiter);
-                    }
-                })
-            }
-        });
-
-
-    };
-    fetchUserData();
-
-  }, [user]);
-
-  const sendMessage = async (event) => {
     event.preventDefault();
-    if (message.trim() === "") {
-      alert("Enter valid message");
-      return;
-    }
+    sendMessage(receiverUid, messageField.value);
 
-    await addDoc(collection(db, "messages"), {
-      text: message,
-      name: userData?.firstName,
-      email: userData?.email,
-      avatar: userData?.profileImg || user?.photoURL,
-      createdAt: serverTimestamp(),
-      uid: userData?.firebaseUID,
-      receiverUid: receiverUid,
-      hasRead: 'false',
-    });
-    setMessage("");
-    scroll.current.scrollIntoView({ behavior: "smooth" });
+    messageField.value = "";
+
+    // scroll.current.scrollIntoView({ behavior: "smooth" });
   };
+
   return (
-    <form onSubmit={(event) => sendMessage(event)} className="send-message">
+    <form className={styles.SendMessage} onSubmit={send}>
       <label htmlFor="messageInput" hidden>
         Enter Message
       </label>
@@ -67,12 +29,10 @@ const SendMessage = ({ scroll, profileUid }) => {
         id="messageInput"
         name="messageInput"
         type="text"
-        className="form-input__input"
-        placeholder="type message..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        placeholder="Type message"
+        defaultValue=""
       />
-      <button type="submit">Send</button>
+      <button type="submit"><IconSend /></button>
     </form>
   );
 };

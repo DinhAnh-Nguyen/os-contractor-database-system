@@ -1,28 +1,46 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Timestamp } from "firebase/firestore";
 import { auth } from "../../firebaseconfig";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Avatar from '@mui/material/Avatar';
+import { messagesContext } from '../../contexts/MessagesContext';
+
+import { ReactComponent as IconArchive } from "../../assets/icons/archiveChat.svg";
+import { ReactComponent as IconStar } from "../../assets/icons/starChat.svg";
+import { ReactComponent as IconTrash } from "../../assets/icons/trashChat.svg";
+
+import styles from "./Message.module.css";
 
 const Message = ({ message }) => {
   const [user] = useAuthState(auth);
+  const { updateMessage } = useContext(messagesContext);
+
+  let archived = null;
+  let starred = null;
+  let deleted = null;
+
+  if (message.uid === user.uid) {
+    archived = message.archived === true;
+    starred = message.starred === true;
+    deleted = (message.deletedOn);
+  }
+  else {
+    archived = message.receiverArchived === true;
+    starred = message.receiverStarred === true;
+    deleted = (message.receiverDeletedOn);
+  }
+
+  const createdAt = new Timestamp(message.createdAt.seconds, message.createdAt.nanoseconds);
+
   return (
-    <div className={`chat-bubble ${message.uid === user.uid ? "right" : ""}`}>
-      {message?.avatar? (
-      <img
-        className="chat-bubble__left"
-        src={message.avatar}
-        alt="user avatar"
-      />) : (<Avatar
-                                            
-        alt="Avatar"
-        key={message.id}
-        className="chat-bubble__left"
-         />)}
-      <div className="chat-bubble__right">
-        <p className="user-name">{message.name}</p>
-        <p className="user-message">{message.text}</p>
+    <article className={message.uid === user.uid ? styles.Receiver : styles.Sender}>
+      <div>{message.text}</div>
+      <div className={styles.Timestamp}>{createdAt.toDate().toLocaleTimeString()}</div>
+      <div className={styles.Actions}>
+        <IconArchive className={archived ? styles.Distinct : null} onClick={() => updateMessage(message, {archive:  !archived})} />
+        <IconStar className={starred ? styles.Distinct : null} onClick={() => updateMessage(message, {star:  !starred})} />
+        <IconTrash className={deleted ? styles.Distinct : null} onClick={() => updateMessage(message, {delete:  !deleted})} />
       </div>
-    </div>
+    </article>
   );
 };
 

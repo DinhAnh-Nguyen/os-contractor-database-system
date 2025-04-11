@@ -1,6 +1,6 @@
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
-import { contractorsContext } from "../../contexts/ContractorsContext";
+import { userProfileContext } from "../../contexts/UserProfileContext";
 import { Navigation } from "../index";
 import React, { useContext, useState, useCallback, useMemo } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
@@ -77,15 +77,6 @@ export default function Search() {
     city,
   ]);
 
-  // Add this useEffect for initial load
-  // useEffect(() => {
-  //   setContractors(filterContractors());
-  // }, []);  // Empty dependency array means it only runs once on mount
-
-  // useEffect(() => {
-  //   setContractors(filterContractors());
-  // }, [contractorList, filterContractors]);
-
   const memoizedSearchState = useMemo(
     () => ({
       selectedQualification,
@@ -97,35 +88,6 @@ export default function Search() {
     [selectedSkills, selectedQualification, country, state, city]
   );
 
-  // useEffect(() => {
-  //   const clearSessionStorage = () => {
-  //     sessionStorage.removeItem("searchState");
-  //   };
-
-  //   window.addEventListener("beforeunload", clearSessionStorage);
-  //   if (searchStateFromLocation) {
-  //     setSelectedSkills(searchStateFromLocation.selectedSkills || []);
-  //     setSelectedQualification(
-  //       searchStateFromLocation.selectedQualification || []
-  //     );
-  //     setCountry(searchStateFromLocation.country || "");
-  //     setState(searchStateFromLocation.state || "");
-  //     setCity(searchStateFromLocation.city || "");
-  //   } else {
-  //     const savedState = JSON.parse(sessionStorage.getItem("searchState"));
-  //     if (savedState) {
-  //       setSelectedSkills(savedState.selectedSkills || []);
-  //       setSelectedQualification(savedState.selectedQualification || []);
-  //       setCountry(savedState.country || "");
-  //       setState(savedState.state || "");
-  //       setCity(savedState.city || "");
-  //     }
-  //   }
-  //   return () => {
-  //     window.removeEventListener("beforeunload", clearSessionStorage);
-  //   };
-  // }, [searchStateFromLocation]);
-
   const handleOptionQualificationChange = (option) => {
     setSelectedQualification(
       selectedQualification.includes(option) ? [] : [option]
@@ -133,119 +95,8 @@ export default function Search() {
     setSelectedSkills([]);
   };
 
-  // console.log(contractors);
-
-  // useEffect(() => {
-  //   sessionStorage.setItem(
-  //     "searchState",
-  //     JSON.stringify({
-  //       selectedQualification,
-  //       selectedSkills: selectedSkills || [],
-  //       country,
-  //       state,
-  //       city,
-  //     })
-  //   );
-
-  //   const contractorFilteredList = () => {
-  //     const initialFilteredContractors = filterContractors();
-
-  //     // const filteredContractors = initialFilteredContractors.filterContractorsByQualification(initialFilteredContractors, selectedQualification);
-  //     // console.log("filteredContractors", filteredContractors);
-
-  //     // for (const contractor of filteredContractors) {
-  //     //   console.log("contractor", contractor);
-
-  //     //   let numMatchingSkills = 0;
-
-  //     //   if (selectedSkills.length > 0) {
-  //     //     for (const option of selectedSkills) {
-  //     //       if (contractor?.skills) {
-  //     //         const matchingSkills = contractor.skills.filter(
-  //     //           (skill) => skill.skill === option
-  //     //         );
-  //     //         console.log("matching skills ", matchingSkills);
-  //     //         numMatchingSkills += matchingSkills.length;
-  //     //       }
-  //     //     }
-  //     //   } else {
-  //     //     numMatchingSkills = 1;
-  //     //   }
-
-  //     //   // Filter contractors by qualification
-  //     //   const isMatchingQualification =
-  //     //     selectedQualification.length === 0 ||
-  //     //     selectedQualification.includes(contractor.qualification);
-
-  //     //   // Filter contractors by location (country, state, and city)
-  //     //   const isMatchingLocation =
-  //     //     (!country || contractor.countryCode === country) &&
-  //     //     (!state || contractor.stateCode === state) &&
-  //     //     (!city || contractor.city === city);
-
-  //     //   // const percentMatching = selectedSkills.length
-  //     //   //   ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
-  //     //   //   : 100;
-
-  //     //   // const shouldShowContractor =
-  //     //   //   numMatchingSkills > 0 &&
-  //     //   //   isMatchingLocation &&
-  //     //   //   isMatchingQualification;
-
-  //     //   // if (shouldShowContractor) {
-  //     //   //   filteredContractors.push({
-  //     //   //     ...contractor,
-  //     //   //     percentMatching,
-  //     //   //   });
-  //     //   // }
-  //     // }
-
-  //     // filteredContractors.sort((a, b) => {
-  //     //   if (b.percentMatching === a.percentMatching) {
-  //     //     return (a.firstName || "").localeCompare(b.firstName || "");
-  //     //   }
-  //     //   return b.percentMatching - a.percentMatching;
-  //     // });
-
-  //     setContractors(initialFilteredContractors);
-  //     console.log("filteredContractors", initialFilteredContractors);
-  //   };
-
-  //   contractorFilteredList();
-  // }, [
-  //   contractorList,
-  //   selectedSkills,
-  //   selectedQualification,
-  //   city,
-  //   country,
-  //   filterContractors,
-  //   state,
-  // ]);
-
-  // const handleClearQualification = () => {
-  //   setSelectedQualification([]);
-  // };
-
-  // const handleClearLocation = () => {
-  //   setCountry("");
-  //   setState("");
-  //   setCity("");
-  // };
-
-  const handleSearch = () => {
-    setContractors(filterContractors());
-
-    setTimeout(() => {
-      const contractorListContainer = document.querySelector(
-        ".contractor_list_container"
-      );
-      if (contractorListContainer) {
-        contractorListContainer.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 0);
-  };
-
-  const handleClearAll = () => {
+  
+  const handleClearQualification = () => {
     setSelectedQualification([]);
 
     setSelectedSkills([]);
@@ -256,8 +107,6 @@ export default function Search() {
 
     setContractors([]);
   };
-
-  // const handleScrollToContractorList = () => {};
 
   return (
     <div className="main_container">

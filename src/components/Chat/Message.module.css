@@ -1,0 +1,53 @@
+.Receiver {
+	display: grid;
+	margin: 1em 0px 1em;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr max-content;
+	grid-template-areas:
+	        "message message"
+		"actions timestamp";
+	justify-content: end;
+	text-align: end;
+}
+
+.Sender {
+	display: grid;
+	margin: 1em 0px 1em;
+	grid-template-rows: auto;
+	grid-template-columns: max-content 1fr;
+	grid-template-areas:
+	        "message message"
+		"timestamp actions";
+	justify-content: start;
+	text-align: start;
+}
+
+.Sender *:first-child, .Receiver *:first-child {
+	grid-area: message;
+}
+
+/*
+Ideally, the following three selectors would all be declared like the preceding selector, but
+issues with the order in which rules were being applied were found during testing and therefore
+it isn't possible at the time of this writing.
+*/
+
+.Timestamp {
+	grid-area: timestamp;
+	font-size: smaller;
+	font-weight: 600;  /* Semi-Bold */
+	color: var(--colour-secondary-8);
+}
+
+.Actions {
+	grid-area: actions;
+	color: var(--colour-secondary-8);
+}
+
+.Actions > * {
+	margin: 0px 10px;
+}
+
+.Distinct {
+	color: var(--content-colour-distinct);
+}

@@ -1,90 +1,65 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
-import {
-  query,
-  collection,
-  orderBy,
-  onSnapshot,
-  limit,
-  where,
-  getDocs,
-  updateDoc, doc
-
-
-} from "firebase/firestore";
-import { db } from "../../firebaseconfig";
+import React, { useRef, useEffect, useContext } from "react";
+import { messagesContext } from '../../contexts/MessagesContext';
+import ProfilePicture from '../ProfilePicture';
 import Message from "./Message";
 import SendMessage from "./SendMessage";
-import Navigation from "../navigation/Navigation";
-import "./Chat.css";
-import { authContext } from '../../contexts/Authorization';
-import { useParams } from "react-router-dom";
 
-const ChatBox = () => {
-  const [messages, setMessages] = useState([]);
+import styles from "./ChatBox.module.css";
+
+const ChatBox = ({ chatsList, correspondentUid }) => {
+  const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "full" });
   const scroll = useRef();
-  const { user } = useContext(authContext);
-  const userUid = user?.uid;
-  const { uid } = useParams();
-
+  const { getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+  const numUnreadMessages = getNumUnreadMessages();
+  const chat = chatsList.find((chat) => chat.uid === correspondentUid);
+  const messageGroups = [];
 
   useEffect(() => {
+    if (scroll.current)
+      scroll.current.scrollIntoView({ behavior: "smooth" });
+  }, [correspondentUid, chatsList]);
 
-    const updateHasRead = async () => {
-      const q = query(
-        collection(db, "messages"),
-        where("receiverUid", "==", userUid),
-        where("hasRead", "==", 'false')
-      );
+  if (chat) {
+    updateHasRead(chat);
 
-      const snapshot = await getDocs(q);
+    chat.messages.forEach(message => {
+      const messageDateString = dateFormatter.format(message.createdAt.toDate());
 
-      const updatePromises = snapshot.docs.map((messageDoc) => {
-        const messageRef = doc(db, "messages", messageDoc.id);
-        return updateDoc(messageRef, { hasRead: 'true' });
-      });
+      if ((messageGroups.length === 0) || (messageGroups[messageGroups.length - 1].date !== messageDateString))
+        messageGroups.push({ date: messageDateString, messages: []});
 
-      await Promise.all(updatePromises);
-    };
+      messageGroups[messageGroups.length - 1].messages.push(message);
+    })
+  }
 
-    updateHasRead();
-
-    const q = query(
-        collection(db, "messages"),
-        where("uid", "in", [userUid, uid]),
-        where("receiverUid", "in", [userUid, uid]),
-        orderBy("createdAt", "desc"),
-        limit(50)
-    );
-
-    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
-      const fetchedMessages = [];
-      QuerySnapshot.forEach((doc) => {
-        fetchedMessages.push({ ...doc.data(), id: doc.id });
-
-      });
-      const sortedMessages = fetchedMessages.sort(
-        (a, b) => a.createdAt - b.createdAt
-      );
-      setMessages(sortedMessages);
-    });
-    return () => unsubscribe;
-  }, [userUid]);
-
-  return (
+  return (chat ?
     <>
-    <Navigation />
-    <main className="chat-box">
-
-      <div className="messages-wrapper">
-        {messages?.map((message, index) => (
-          <Message key={index} message={message} />
+      <div className={styles.Header}>
+        <ProfilePicture profileImage={chat.avatar} size="80px" />
+        <div>
+          <span>{chat.firstName}{" "}{chat.lastName}</span><br />
+          <span>{chat.qualification}</span>
+        </div>
+      </div>
+      <div className={styles.MessageList}>
+        {messageGroups.map((group) => (
+          <section key={group.date}>
+            <p className="splitBar">{group.date}</p>
+            {group.messages.map((message) => (
+              <Message key={message.id} message={message} />
+            ))}
+          </section>
         ))}
       </div>
-      {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
+      {/* when a new message enters the chat, the screen scrolls down to this element */}
       <span ref={scroll}></span>
-      <SendMessage scroll={scroll} profileUid={uid} />
-    </main>
-    </>
+      <div className={styles.Footer}>
+        <SendMessage receiverUid={correspondentUid} />
+      </div>
+    </>:
+    <div className={styles.NoSelection}>
+      You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}
+    </div>
   );
 };
 
