@@ -76,7 +76,7 @@ export default function RecruiterProfileForm(props) {
   return (
     <>
       {userProfile && (
-        <div id="UpdateProfile">
+        <div className={styles.UpdateProfile}>
           <form ref={form} onSubmit={onSubmit}>
             <section className={styles.PersonalInfo}>
               <div style={{ gridArea: "profileImg" }}>
