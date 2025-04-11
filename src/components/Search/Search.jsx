@@ -8,6 +8,7 @@ import React, {
   useCallback,
   useMemo,
   useEffect,
+  useRef,
 } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,8 @@ export default function Search() {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedQualification, setSelectedQualification] = useState([]);
 
+  const contractorListRef = useRef(null);
+
   const filterContractors = useCallback(() => {
     const calculatePercentMatching = (contractor) => {
       if (selectedSkills.length === 0) return "";
@@ -35,6 +38,7 @@ export default function Search() {
 
       return Math.round((matchingSkills / selectedSkills.length) * 100);
     };
+
     return contractorList
       .filter(
         (contractor) =>
@@ -77,7 +81,7 @@ export default function Search() {
 
   useEffect(() => {
     setContractors(filterContractors());
-  }, [contractorList, filterContractors]);
+  }, []);
 
   const memoizedSearchState = useMemo(
     () => ({
@@ -110,16 +114,23 @@ export default function Search() {
   };
 
   const handleSearch = () => {
-    setContractors(filterContractors());
+    const isFilterApplied =
+      selectedSkills.length > 0 ||
+      selectedQualification.length > 0 ||
+      country ||
+      state ||
+      city;
 
-    setTimeout(() => {
-      const contractorListContainer = document.querySelector(
-        ".contractor_list_container"
-      );
-      if (contractorListContainer) {
-        contractorListContainer.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 0);
+    if (isFilterApplied) {
+      setContractors(filterContractors());
+      setTimeout(() => {
+        if (contractorListRef.current) {
+          contractorListRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 0);
+    } else {
+      setContractors([]);
+    }
   };
 
   return (
@@ -155,9 +166,9 @@ export default function Search() {
             initialSelectedSkills={selectedSkills}
             getSelectedSkills={(skill) => setSelectedSkills(skill)}
           />
-          <div className="search_location_container">
-            <p className="search_location_title">Search by Location</p>
-            <div className="search_location">
+          <div className={style["search_location_container"]}>
+            <p>Search by Location</p>
+            <div>
               <CSCSelector
                 initialCountry={country}
                 initialState={state}
@@ -168,83 +179,94 @@ export default function Search() {
               />
             </div>
           </div>
-          <div className="button_container">
-            <div className="search_button">
-              <button onClick={handleSearch}>Search</button>
-            </div>
-            <div className="clear_button">
-              <button onClick={handleClearAll}>Clear All</button>
-            </div>
+          <div className={style["button_container"]}>
+            <button onClick={handleSearch}>Search</button>
+            <button onClick={handleClearAll}>Clear All</button>
           </div>
-          <ul className="contractor_list_container">
-            <div className="message">
-              {contractors.length === 1
-                ? "1 match"
-                : `${contractors.length} matches`}{" "}
-              for your project!
-            </div>
-            {contractors.map((contractor) => (
-              <div
-                className="contractor_container"
-                key={contractor?.id}
-                onClick={() => {
-                  navigate(`/contractor/${contractor?.id}`, {
-                    state: {
-                      searchState: memoizedSearchState,
-                    },
-                  });
-                }}
-              >
-                <div className="result_container">
-                  <div className="result_percent">
-                    <b>
-                      {contractor.percentMatching ? (
-                        `${contractor.percentMatching}%`
+          <ul
+            className={style["contractor_list_container"]}
+            ref={contractorListRef}
+          >
+            {contractors.length > 0 ? (
+              <>
+                <div className={style["message"]}>
+                  {contractors.length === 1
+                    ? "1 match"
+                    : `${contractors.length} matches`}{" "}
+                  for your project!
+                </div>
+                {contractors.map((contractor) => (
+                  <div
+                    className={style["contractor_container"]}
+                    key={contractor?.id}
+                    onClick={() => {
+                      navigate(`/contractor/${contractor?.id}`, {
+                        state: {
+                          searchState: memoizedSearchState,
+                        },
+                      });
+                    }}
+                  >
+                    <div className={style["result_container"]}>
+                      <div className={style["result_percent"]}>
+                        <b>
+                          {contractor.percentMatching ? (
+                            `${contractor.percentMatching}%`
+                          ) : (
+                            <p></p>
+                          )}
+                        </b>
+                      </div>
+                      {contractor?.profileImg ? (
+                        <div className={style["result_profile_image"]}>
+                          <img src={contractor?.profileImg} alt="Profile" />
+                        </div>
                       ) : (
-                        <p></p>
+                        <div className={style["result_no_image"]}>
+                          <img src={avatarURL} alt="Avatar" />
+                        </div>
                       )}
-                    </b>
-                  </div>
-                  {contractor?.profileImg ? (
-                    <div className="result_profile_image">
-                      <img src={contractor?.profileImg} alt="Profile" />
                     </div>
-                  ) : (
-                    <div className="result_no_image">
-                      <img src={avatarURL} alt="Avatar" />
-                    </div>
-                  )}
-                </div>
-                <div className="result_info">
-                  <div>
-                    <b>{contractor?.firstName}&nbsp;</b>
-                    <b>{contractor?.lastName}&nbsp;</b>
-                    <div className="contractor_qualification_worksite">
-                      <div className="contractor_qualification2">
-                        {contractor?.qualification}
+                    <div className={style["result_info"]}>
+                      <div>
+                        <b>{contractor?.firstName}&nbsp;</b>
+                        <b>{contractor?.lastName}&nbsp;</b>
+                        <div
+                          className={style["contractor_qualification_worksite"]}
+                        >
+                          <div className={style["contractor_qualification2"]}>
+                            {contractor?.qualification}
+                          </div>
+                          <div className={style["contractor_worksite"]}>
+                            {contractor?.workSite}
+                          </div>
+                        </div>
                       </div>
-                      <div className="contractor_worksite">
-                        {contractor?.workSite}
+                      <div className={style["contractor_summary"]}>
+                        {contractor.summary}
+                      </div>
+                      <div className={style["contractor_skills"]}>
+                        {contractor?.skills && (
+                          <div className={style["result_skills_btns"]}>
+                            {contractor?.skills.map((resultSkill, index) => {
+                              return (
+                                <span key={index} className={style["badge"]}>
+                                  {resultSkill.skill}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                  <div className="contractor_summary">{contractor.summary}</div>
-                  <div className="contractor_skills">
-                    {contractor?.skills && (
-                      <div className="result_skills_btns">
-                        {contractor?.skills.map((resultSkill, index) => {
-                          return (
-                            <span key={index} className="badge">
-                              {resultSkill.skill}
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                ))}
+              </>
+            ) : (
+              <div className={style["message"]}>
+                No contractors found for your search criteria.
               </div>
-            ))}
+            )}
           </ul>
         </div>
       </main>

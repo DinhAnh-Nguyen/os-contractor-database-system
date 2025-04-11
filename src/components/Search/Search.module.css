@@ -40,27 +40,44 @@ p {
 
 /* Location */
 .search_location_container {
+  margin-bottom: 28px;
+}
+
+.search_location_container > p {
   margin-bottom: 20px;
+  white-space: nowrap;
 }
 
-.search_location_title {
-  font-weight: bold;
-  padding-left: 10px;
-}
-
-/* Mui */
-.MuiButtonBase-root {
-  height: 30px;
-}
-
-.search_options h2 {
+/* Button */
+.button_container {
   display: flex;
-  text-align: center;
-  margin: 0;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  margin-top: 58px;
+  margin-bottom: 28px;
 }
 
+button:last-of-type {
+  color: var(--colour-secondary-9);
+  filter: none;
+}
+
+.button_container > button {
+  width: 40%;
+  margin-bottom: 19px;
+  cursor: pointer;
+}
+
+.button_container > button:last-of-type {
+  width: 15%;
+  background-color: var(--colour-secondary-7);
+  color: var(--colour-secondary-2);
+  margin-bottom: 0px;
+  filter: drop-shadow(0px 4px 4px rgb(128, 128, 128, 0.5));
+}
+
+/* Contractor List */
 .contractor_qualification_worksite {
   display: flex;
 }
@@ -96,7 +113,7 @@ p {
 
 .message {
   font-size: 20px;
-  color: #E3474B;
+  color: #e3474b;
   font-weight: bold;
   margin-bottom: 20px;
   cursor: pointer;
@@ -128,48 +145,6 @@ p {
 
 .result_percent {
   min-width: 60px;
-}
-
-/* Button */
-.button_container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.clear_button {
-  display: flex;
-  justify-content: center;
-}
-
-.clear_button button {
-  width: 100px;
-  height: 40px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-}
-
-.clear_button button:hover {
-  background-color: #bdbaba;
-}
-
-.search_button {
-  display: flex;
-  justify-content: center;
-  margin-right: 20px;
-}
-
-.search_button button {
-  width: 100px;
-  height: 40px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-}
-
-.search_button button:hover {
-  background-color: #bdbaba;
 }
 
 .result_profile_image img {
