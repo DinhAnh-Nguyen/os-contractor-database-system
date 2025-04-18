@@ -20,7 +20,7 @@ p {
 /* Qualification  */
 .search_qualification_container {
   display: flex;
-  column-gap: 39px;
+  justify-content: space-between;
 }
 
 .search_qualification_container > p {
@@ -152,7 +152,9 @@ img {
   font-size: 14px;
 }
 
-.favorite_contractor img {
+.favorite_contractor {
   width: 25px;
-  height: 20px;
+  height: 20.26px;
+  border-radius: 0px;
+  object-fit: contain;
 }

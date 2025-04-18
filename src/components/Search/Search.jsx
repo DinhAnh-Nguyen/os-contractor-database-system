@@ -253,8 +253,8 @@ export default function Search() {
                         </div>
                       )}
                     </div>
-                    <div className={style["favorite_contractor"]}>
-                      <img src={favContractor} alt="Favourite Contractor" />
+                    <div>
+                      <img src={favContractor} className={style["favorite_contractor"]} alt="Favourite Contractor" />
                     </div>
                   </div>
                 </div>
