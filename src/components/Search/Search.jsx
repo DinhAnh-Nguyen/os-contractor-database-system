@@ -28,7 +28,9 @@ export default function Search() {
   const [state, setState] = React.useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedQualification, setSelectedQualification] = useState([]);
+  const [selectedWorkSite, setSelectedWorkSite] = useState([]);
 
+  const workSiteList = ["On Site", "Hybrid", "Remote"];
   const contractorListRef = useRef(null);
 
   const filterContractors = useCallback(() => {
@@ -56,6 +58,15 @@ export default function Search() {
         if (selectedSkills.length === 0) return true;
         return contractor.skills.some((skill) =>
           selectedSkills.includes(skill.skill)
+        );
+      })
+
+      .filter((contractor) => {
+        if (selectedWorkSite.length === 0) return true;
+        return selectedWorkSite.some(
+          (worksite) =>
+            worksite.trim().toLowerCase() ===
+            contractor.workSite?.trim().toLowerCase()
         );
       })
       .filter((contractor) => {
@@ -100,6 +111,11 @@ export default function Search() {
     setSelectedQualification(
       selectedQualification.includes(option) ? [] : [option]
     );
+    setSelectedSkills([]);
+  };
+
+  const handleOptionWorksiteChange = (option) => {
+    setSelectedWorkSite(selectedWorkSite.includes(option) ? [] : [option]);
     setSelectedSkills([]);
   };
 
@@ -168,22 +184,36 @@ export default function Search() {
             initialSelectedSkills={selectedSkills}
             getSelectedSkills={(skill) => setSelectedSkills(skill)}
           />
-          <div className={style["search_location_container"]}>
+          <div className={style["search_qualification_container"]}>
             <p>Search by worksite</p>
-          </div>
-          <div className={style["search_location_container"]}>
-            <p>Search by location</p>
             <div>
-              <CSCSelector
-                initialCountry={country}
-                initialState={state}
-                initialCity={city}
-                getCountry={(country) => setCountry(country)}
-                getState={(state) => setState(state)}
-                getCity={(city) => setCity(city)}
-              />
-            </div>
+              {workSiteList.map((option) => (
+                <div className={style["search_radio"]} key={option}>
+                  <Radio
+                    checked={selectedWorkSite.includes(option)}
+                    onClick={() => handleOptionWorksiteChange(option)}
+                  />
+                  {option}
+                </div>
+              ))}
+            </div>{" "}
           </div>
+          {(selectedWorkSite.includes("On Site") ||
+            selectedWorkSite.includes("Hybrid")) && (
+            <div className={style["search_location_container"]}>
+              <p>Search by location</p>
+              <div>
+                <CSCSelector
+                  initialCountry={country}
+                  initialState={state}
+                  initialCity={city}
+                  getCountry={(country) => setCountry(country)}
+                  getState={(state) => setState(state)}
+                  getCity={(city) => setCity(city)}
+                />
+              </div>
+            </div>
+          )}
           <div className={style["button_container"]}>
             <button onClick={handleSearch}>Search</button>
             <button onClick={handleClearAll}>Clear All</button>
@@ -254,7 +284,11 @@ export default function Search() {
                       )}
                     </div>
                     <div>
-                      <img src={favContractor} className={style["favorite_contractor"]} alt="Favourite Contractor" />
+                      <img
+                        src={favContractor}
+                        className={style["favorite_contractor"]}
+                        alt="Favourite Contractor"
+                      />
                     </div>
                   </div>
                 </div>
