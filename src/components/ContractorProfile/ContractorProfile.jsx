@@ -150,7 +150,7 @@ const ContractorProfile = (props) => {
             <div>
               {contractor?.workSite}
             </div>
-
+            
             <div>
               {contractor?.availability === 'Other' ? contractor?.availabilityDetails : contractor?.availability}
             </div>

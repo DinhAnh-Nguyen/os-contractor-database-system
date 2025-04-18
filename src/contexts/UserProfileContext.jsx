@@ -37,28 +37,34 @@ function UserProfileContext({ children }) {
 		const fetchUsers = (collectionName, setUsers, setUnsubscribe) => {
 			const usersQuery = query(collection(db, collectionName));
 
-			setUnsubscribe(() => onSnapshot(usersQuery,
-				(snapshot) => {
-					setUsers(snapshot.docs.map((doc) => ({
-						id: doc.id,
-						...doc.data(),
-					})));
-				},
-				(error) => {console.error(`Error fetching users from "${collection}":`, error);})
+			setUnsubscribe(() =>
+				onSnapshot(
+					usersQuery,
+					(snapshot) => {
+						const normalizedUsers = snapshot.docs.map((doc) => {
+							const data = doc.data();
+							// WorkSite field converted to array when a contractor's doc is retreieved from the database
+							if (typeof data.workSite === "string") {
+								data.workSite = [data.workSite];
+							}
+							return { id: doc.id, ...data };
+						});
+						setUsers(normalizedUsers);
+					},
+					(error) => {
+						console.error(`Error fetching users from "${collectionName}":`, error);
+					}
+				)
 			);
-		}
+		};
 
 		if (contractorsUnsubscribe) {
 			contractorsUnsubscribe();
 		}
 
-		if (recruitersUnsubscribe) {
-			recruitersUnsubscribe();
-		}
-
 		if (user) {
-			fetchUsers('techs', setContractors, setContractorsUnsubscribe);
-			fetchUsers('recruiter', setRecruiters, setRecruitersUnsubscribe);
+			fetchUsers("techs", setContractors, setContractorsUnsubscribe);
+			fetchUsers("recruiter", setRecruiters, setRecruitersUnsubscribe);
 		} else {
 			setContractors([]);
 			setRecruiters([]);

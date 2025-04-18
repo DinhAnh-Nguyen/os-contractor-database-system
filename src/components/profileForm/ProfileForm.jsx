@@ -99,7 +99,13 @@ export default function ProfileForm(props) {
       newUserProfile.otherInfo.githubUrl = formElements.githubUrl.value;
       newUserProfile.otherInfo.linkedinUrl = formElements.linkedinUrl.value;
       newUserProfile.availability = formElements.availability.value;
-      newUserProfile.workSite = formElements.workSite.value;
+
+      const workSite = [];
+      if (formElements.workSiteOnSite.checked) workSite.push("On Site");
+      if (formElements.workSiteHybrid.checked) workSite.push("Hybrid");
+      if (formElements.workSiteRemote.checked) workSite.push("Remote");
+      newUserProfile.workSite = workSite;
+
       newUserProfile.skills = skills;
       newUserProfile.projects = projects;
 
@@ -210,8 +216,8 @@ export default function ProfileForm(props) {
                 <span>Work location *</span>
                 <label>
                   <input
-                    type="radio"
-                    name="workSite"
+                    type="checkbox"
+                    name="workSiteOnSite"
                     value="On Site"
                     defaultChecked={initialFormData?.workSite === "On Site"}
                     required
@@ -220,8 +226,8 @@ export default function ProfileForm(props) {
                 </label>
                 <label>
                   <input
-                    type="radio"
-                    name="workSite"
+                    type="checkbox"
+                    name="workSiteHybrid"
                     value="Hybrid"
                     defaultChecked={initialFormData?.workSite === "Hybrid"}
                   />{" "}
@@ -229,8 +235,8 @@ export default function ProfileForm(props) {
                 </label>
                 <label>
                   <input
-                    type="radio"
-                    name="workSite"
+                    type="checkbox"
+                    name="workSiteRemote"
                     value="Remote"
                     defaultChecked={initialFormData?.workSite === "Remote"}
                   />{" "}

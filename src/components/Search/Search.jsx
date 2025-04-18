@@ -121,8 +121,8 @@ export default function Search() {
 
   const handleClearAll = () => {
     setSelectedQualification([]);
-
     setSelectedSkills([]);
+    setSelectedWorkSite([]);
 
     setCountry("");
     setState("");
